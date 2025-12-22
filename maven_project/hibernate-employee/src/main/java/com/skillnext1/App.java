@@ -1,13 +1,26 @@
 package com.skillnext1;
 
-/**
- * Hello world!
- *
- */
-public class App 
-{
-    public static void main( String[] args )
-    {
-        System.out.println( "Hello World!" );
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+
+public class App {
+    public static void main(String[] args) {
+
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        Transaction tx = session.beginTransaction();
+
+        Employee emp = new Employee(
+                "Meghana",
+                "meghana@gmail.com",
+                45000
+        );
+
+        session.persist(emp);
+
+        tx.commit();
+        session.close();
+
+        System.out.println("Employee inserted successfully!");
     }
 }
+
