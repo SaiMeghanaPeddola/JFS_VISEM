@@ -1,58 +1,32 @@
-package com.skillnext1;
+package com.skillnext;
 
 public class Student {
+
     private int id;
     private String name;
     private String email;
-    private String course;
+    private double marks;
 
-    // Constructors
     public Student() {}
 
-    public Student(String name, String email, String course) {
+    public Student(String name, String email, double marks) {
         this.name = name;
         this.email = email;
-        this.course = course;
+        this.marks = marks;
     }
 
-    public Student(int id, String name, String email, String course) {
-        this.id = id;
-        this.name = name;
-        this.email = email;
-        this.course = course;
-    }
+    public int getId() { return id; }
+    public String getName() { return name; }
+    public String getEmail() { return email; }
+    public double getMarks() { return marks; }
 
-    // Getters & Setters
-    public int getId() {
-        return id;
-    }
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getCourse() {
-        return course;
-    }
-    public void setCourse(String course) {
-        this.course = course;
-    }
+    public void setId(int id) { this.id = id; }
+    public void setName(String name) { this.name = name; }
+    public void setEmail(String email) { this.email = email; }
+    public void setMarks(double marks) { this.marks = marks; }
 
     @Override
     public String toString() {
-        return id + " | " + name + " | " + email + " | " + course;
+        return id + " | " + name + " | " + email + " | " + marks;
     }
 }

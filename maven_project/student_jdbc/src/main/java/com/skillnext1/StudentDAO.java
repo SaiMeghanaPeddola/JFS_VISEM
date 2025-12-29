@@ -1,77 +1,74 @@
-package com.skillnext1;
+package com.skillnext;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
 public class StudentDAO {
 
-    private final String URL = "jdbc:mysql://localhost:3306/skillnext_db";
-    private final String USER = "root";
-    private final String PASSWORD = "root";
+    private static final String URL =
+        "jdbc:mysql://localhost:3306/skillnext_db";
+    private static final String USER = "root";
+    private static final String PASS = "root";
 
-    // Insert student
+    // INSERT
     public void addStudent(Student s) throws Exception {
-        Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
 
-        String sql = "INSERT INTO student(name, email, course) VALUES (?, ?, ?)";
-        PreparedStatement stmt = conn.prepareStatement(sql);
-        stmt.setString(1, s.getName());
-        stmt.setString(2, s.getEmail());
-        stmt.setString(3, s.getCourse());
-        stmt.executeUpdate();
+        Connection con = DriverManager.getConnection(URL, USER, PASS);
+        String sql = "INSERT INTO student(name,email,marks) VALUES(?,?,?)";
 
-        conn.close();
+        PreparedStatement ps = con.prepareStatement(sql);
+        ps.setString(1, s.getName());
+        ps.setString(2, s.getEmail());
+        ps.setDouble(3, s.getMarks());
+
+        ps.executeUpdate();
+        con.close();
+
+        System.out.println("Student Added Successfully");
     }
 
-    // Get all students
-    public List<Student> getStudents() throws Exception {
-        List<Student> list = new ArrayList<>();
+    // VIEW ALL
+    public List<Student> getAllStudents() throws Exception {
 
-        Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
-        String sql = "SELECT * FROM student";
-        PreparedStatement stmt = conn.prepareStatement(sql);
-        ResultSet rs = stmt.executeQuery();
+        List<Student> list = new ArrayList<>();
+        Connection con = DriverManager.getConnection(URL, USER, PASS);
+        Statement st = con.createStatement();
+
+        ResultSet rs = st.executeQuery("SELECT * FROM student");
 
         while (rs.next()) {
-            Student s = new Student(
-                    rs.getInt("id"),
-                    rs.getString("name"),
-                    rs.getString("email"),
-                    rs.getString("course")
-            );
+            Student s = new Student();
+            s.setId(rs.getInt("id"));
+            s.setName(rs.getString("name"));
+            s.setEmail(rs.getString("email"));
+            s.setMarks(rs.getDouble("marks"));
             list.add(s);
         }
-        conn.close();
 
+        con.close();
         return list;
     }
 
-    // Delete student by ID
+    // DELETE
     public void deleteStudent(int id) throws Exception {
-        Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+
+        Connection con = DriverManager.getConnection(URL, USER, PASS);
         String sql = "DELETE FROM student WHERE id=?";
-        PreparedStatement stmt = conn.prepareStatement(sql);
-        stmt.setInt(1, id);
-        stmt.executeUpdate();
-        conn.close();
-    }
 
-    // Update student
-    public void updateStudent(Student s) throws Exception {
-        Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
-        String sql = "UPDATE student SET name=?, email=?, course=? WHERE id=?";
-        PreparedStatement stmt = conn.prepareStatement(sql);
+        PreparedStatement ps = con.prepareStatement(sql);
+        ps.setInt(1, id);
 
-        stmt.setString(1, s.getName());
-        stmt.setString(2, s.getEmail());
-        stmt.setString(3, s.getCourse());
-        stmt.setInt(4, s.getId());
+        int rows = ps.executeUpdate();
+        con.close();
 
-        stmt.executeUpdate();
-        conn.close();
+        if (rows > 0)
+            System.out.println("Student Deleted Successfully");
+        else
+            System.out.println("Student Not Found");
     }
 }
